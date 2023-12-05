@@ -1,8 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
+
+  Future<void> _selectImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      print("Imagem selecionada: ${pickedImage.path}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,4 +25,14 @@ class SignUpPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Adicione aqui um widget para selecionar/adicionar uma foto
+            ElevatedButton(
+              onPressed: _selectImage,
+              child: const Text("Selecionar Foto"),
+            ),
+            // Adicione outros widgets da sua página aqui
+          ],
+        ),
+      ),
+    );
+  }
+}
