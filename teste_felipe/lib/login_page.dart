@@ -1,18 +1,6 @@
+// login_page.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginPage(),
-    );
-  }
-}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,29 +16,23 @@ class LoginPage extends StatelessWidget {
           width: 0,
         ),
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(27),
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 0, 0, 0),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
-          ),
+          color: Color.fromARGB(255, 0, 0, 0),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Centraliza a imagem
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: const Image(
                 image: NetworkImage(
                     "https://lh3.googleusercontent.com/pw/ADCreHcMbSS4WqJhvzp8JM9aZuBedXGw-ERKkvj50h9_QtgCyoXt-vKANd46RchQtAKGFgQvbgExlM-PWHWuKQyyw4b4L9pKKwaE6PLYZOWAMcWabO-3gSHWtS6ZH0YjXe5AsXzuPqe1CgSE4DeXy2vtWBk=w500-h500-s-no-gm?authuser=2"),
-                width: 150, // Ajuste o tamanho conforme necessário
+                width: 150,
               ),
             ),
             const Text(
@@ -72,36 +54,32 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
-              child: CupertinoButton(
-                padding: const EdgeInsets.all(17),
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: const Text(
-                  "Acessar",
-                  style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(17),
+                  primary: const Color.fromARGB(255, 0, 255, 0),
                 ),
                 onPressed: () {
                   // Adicione a lógica de autenticação aqui
                 },
+                child: const Text(
+                  "Acessar",
+                  style: TextStyle(
+                    color: Colors.black, // ou outra cor de texto que ofereça boa legibilidade
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 7),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white70, width: 0.8),
+                border: Border.all(color: Colors.white, width: 0.8),
                 borderRadius: BorderRadius.circular(7),
               ),
-              child: CupertinoButton(
-                child: const Text(
-                  "Crie sua conta",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
-                ),
+              child: TextButton(
                 onPressed: () async {
                   // Adiciona a lógica de criação de conta aqui
                   bool accountCreated = await createAccount(
@@ -117,6 +95,14 @@ class LoginPage extends StatelessWidget {
                     print("Erro ao criar conta");
                   }
                 },
+                child: const Text(
+                  "Crie sua conta",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
@@ -142,11 +128,17 @@ class LoginTextField extends StatelessWidget {
       cursorColor: Colors.pinkAccent,
       padding: const EdgeInsets.all(15),
       placeholder: hintText,
-      placeholderStyle: const TextStyle(color: Color.fromARGB(179, 0, 0, 0), fontSize: 14),
-      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 14),
+      placeholderStyle: const TextStyle(
+        color: Color.fromARGB(179, 0, 0, 0),
+        fontSize: 14,
+      ),
+      style: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 0),
+        fontSize: 14,
+      ),
       obscureText: obscureText,
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: const BorderRadius.all(
           Radius.circular(7),
         ),
@@ -163,14 +155,19 @@ Future<bool> createAccount({
   required String email,
   required String password,
 }) async {
-  await Future.delayed(Duration(seconds: 2));
+  print("Iniciando criação de conta...");
+
+  // Simulação de uma operação assíncrona
+  await Future.delayed(const Duration(seconds: 2));
 
   bool emailInUse = userList.any((user) => user["email"] == email);
 
   if (!emailInUse) {
     userList.add({"email": email, "password": password});
+    print("Conta criada com sucesso!");
     return true;
   } else {
+    print("Erro ao criar conta: E-mail já está em uso.");
     return false;
   }
 }
