@@ -17,7 +17,12 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _dob; // Data de Nascimento
   File? _selectedImage;
 
-  Future<void> _selectImage() async {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<File?> _selectImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -27,20 +32,20 @@ class _SignUpPageState extends State<SignUpPage> {
         _selectedImage = File(pickedImage.path);
       });
     }
+
+    return _selectedImage;
   }
 
   void _saveForm() {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      // Formulário é válido, faça algo com os dados
       print("Nome: $_name");
       print("E-mail: $_email");
       print("Data de Nascimento: $_dob");
-      // Adicione mais lógica conforme necessário
+      print("Senha: $_password");
     }
   }
 
   void _cancel() {
-    // Adicione a lógica para navegar de volta para a tela inicial
     Navigator.of(context).pop();
   }
 
@@ -50,10 +55,10 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         title: const Text(
           "Criar Conta",
-          style: TextStyle(color: Colors.white), // Cor branca para o texto
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-        iconTheme: IconThemeData(color: Colors.white), // Cor branca para o ícone
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -62,18 +67,30 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ElevatedButton(
-                onPressed: _selectImage,
-                child: const Text("Selecionar Foto"),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreen,
-                  onPrimary: Colors.black,
-                ),
+              FutureBuilder<File?>(
+                future: _selectImage(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      return Image.file(snapshot.data!);
+                    } else {
+                      return ElevatedButton(
+                        onPressed: () => _selectImage(),
+                        child: const Text("Selecionar Foto"),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.lightGreen,
+                          onPrimary: Colors.black,
+                        ),
+                      );
+                    }
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
               ),
-              if (_selectedImage != null)
-                Image.file(_selectedImage!),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Nome Completo',
                   fillColor: Colors.grey[200],
@@ -90,12 +107,15 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _dobController,
                 decoration: InputDecoration(
                   labelText: 'Data de Nascimento',
                   fillColor: Colors.grey[200],
                 ),
                 validator: (value) {
-                  // Adicione a lógica de validação da data de nascimento
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira sua data de nascimento.';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -104,6 +124,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'E-mail',
                   fillColor: Colors.grey[200],
@@ -121,6 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Senha',
                   fillColor: Colors.grey[200],

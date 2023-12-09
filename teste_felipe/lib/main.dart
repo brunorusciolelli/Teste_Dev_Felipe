@@ -9,8 +9,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(), // Use LoginPage como a página inicial
-      // ... outros atributos do MaterialApp
+      title: 'Seu App',
+      theme: ThemeData.dark(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginPage(),
+      },
     );
   }
 }

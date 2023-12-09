@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'signup_page.dart';
+import 'profile_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,6 +18,20 @@ class LoginPage extends StatelessWidget {
     if (pickedImage != null) {
       print("Imagem selecionada: ${pickedImage.path}");
     }
+  }
+
+  void _navigateToSignUp(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpPage()),
+    );
+  }
+
+  void _navigateToHome(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfilePage()),
+    );
   }
 
   @override
@@ -57,7 +72,7 @@ class LoginPage extends StatelessWidget {
           const SizedBox(height: 5),
           _buildLoginTextField("Digite sua senha", true),
           const SizedBox(height: 30),
-          _buildElevatedButton(),
+          _buildElevatedButton(context),
           const SizedBox(height: 7),
           _buildCreateAccountButton(context),
         ],
@@ -76,13 +91,29 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildLoginTextField(String hintText, bool obscureText) {
-    return LoginTextField(
-      hintText: hintText,
+    return CupertinoTextField(
+      cursorColor: Colors.pinkAccent,
+      padding: const EdgeInsets.all(15),
+      placeholder: hintText,
+      placeholderStyle: const TextStyle(
+        color: Color.fromARGB(179, 0, 0, 0),
+        fontSize: 14,
+      ),
+      style: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 0),
+        fontSize: 14,
+      ),
       obscureText: obscureText,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 255, 255, 255),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(7),
+        ),
+      ),
     );
   }
 
-  Widget _buildElevatedButton() {
+  Widget _buildElevatedButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -91,7 +122,7 @@ class LoginPage extends StatelessWidget {
           primary: const Color.fromARGB(255, 0, 255, 0),
         ),
         onPressed: () {
-          // Adicione a lógica de autenticação aqui
+          _navigateToHome(context);
         },
         child: const Text(
           "Acessar",
@@ -114,10 +145,7 @@ class LoginPage extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SignUpPage()),
-          );
+          _navigateToSignUp(context);
         },
         child: const Text(
           "Crie sua conta",
@@ -126,41 +154,6 @@ class LoginPage extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoginTextField extends StatelessWidget {
-  final String hintText;
-  final bool obscureText;
-
-  const LoginTextField({
-    Key? key,
-    required this.hintText,
-    required this.obscureText,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoTextField(
-      cursorColor: Colors.pinkAccent,
-      padding: const EdgeInsets.all(15),
-      placeholder: hintText,
-      placeholderStyle: const TextStyle(
-        color: Color.fromARGB(179, 0, 0, 0),
-        fontSize: 14,
-      ),
-      style: const TextStyle(
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontSize: 14,
-      ),
-      obscureText: obscureText,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(7),
         ),
       ),
     );
